@@ -1,0 +1,9 @@
+FROM python:3.9-slim-buster
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY ecommerce_producer.py .
+COPY utils.py .
+COPY confluent_cluster_api.txt .
+COPY ecommerce-events-history-in-electronics-store ecommerce-events-history-in-electronics-store 
+CMD ["python", "ecommerce_producer.py"]

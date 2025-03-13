@@ -39,3 +39,7 @@ terraform.rc
 *.hcl
 
 *.csv
+*.txt
+.cpython
+__pycache__
+images
