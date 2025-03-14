@@ -14,3 +14,15 @@ variable "data_lake_bucket_name_prefix" {
   description = "Prefix for the Cloud Storage Data Lake bucket name (will be made globally unique)"
   default     = "ecom-data-lake-bucket"
 }
+
+variable "dataset_id" {
+  type        = string
+  description = "Dataset ID for bigquery"
+  default = "ecom_event"
+}
+
+variable "table_id" {
+  type        = string
+  description = "Table ID for bigquery"
+  default = "kafka_ecom_events"
+}
