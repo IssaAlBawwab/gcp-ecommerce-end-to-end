@@ -38,8 +38,10 @@ override.tf.json
 terraform.rc
 *.hcl
 
+*.zip
 *.csv
 *.txt
 .cpython
 __pycache__
 images
+!requirements.txt

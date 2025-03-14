@@ -1,7 +1,7 @@
 PRODUCER_IMAGE_NAME=ecommerce-producer-image
 PRODUCER_CONTAINER_NAME=ecommerce-producer-container
 CONFIG_FILE=confluent_cluster_api.txt
-PRODUCER_DOCKERFILE=Dockerfile.producer
+PRODUCER_DOCKERFILE=producer/Dockerfile.producer
 DATA_ZIP_URL=https://www.kaggle.com/api/v1/datasets/download/mkechinov/ecommerce-events-history-in-electronics-store
 DATA_ZIP_FILE=ecommerce-events-history-in-electronics-store.zip
 DATA_DIR=ecommerce-events-history-in-electronics-store
