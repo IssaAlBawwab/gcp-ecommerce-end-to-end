@@ -1,0 +1,15 @@
+FROM python:3.9-slim-buster
+
+WORKDIR /app
+
+COPY consumer/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY consumer/ecommerce_consumer.py .
+COPY utils.py .
+COPY confluent_cluster_api.txt .
+COPY gcp_key.json .
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=gcp_key.json
+
+CMD ["python", "ecommerce_consumer.py"]

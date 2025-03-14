@@ -10,6 +10,7 @@ terraform {
 provider "google" {
   project = var.gcp_project_id
   region  = var.gcp_region
+  credentials = "../gcp_key.json"
 }
 
 # Cloud Storage Bucket
@@ -35,6 +36,7 @@ resource "google_bigquery_dataset" "default" {
 resource "google_bigquery_table" "default" {
   dataset_id = google_bigquery_dataset.default.dataset_id
   table_id   = var.table_id
+  deletion_protection = false
 
   time_partitioning {
     type = "DAY"

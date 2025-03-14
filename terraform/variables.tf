@@ -18,7 +18,7 @@ variable "data_lake_bucket_name_prefix" {
 variable "dataset_id" {
   type        = string
   description = "Dataset ID for bigquery"
-  default = "ecom_event"
+  default = "ecom_events"
 }
 
 variable "table_id" {
