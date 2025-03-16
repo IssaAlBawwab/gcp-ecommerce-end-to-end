@@ -31,35 +31,6 @@ The BigQuery `kafka_ecom_events` table is designed with performance and cost-eff
 
 * **Kafka Partition Key (`user_id`):** While the Kafka topic is partitioned by `user_id` (which is useful for ensuring message ordering per user within Kafka), we opted not to use `user_id` as the primary partitioning or clustering key in BigQuery. This is because our anticipated analytical queries are more likely to focus on time-based analysis and aggregations across different event types, products, and categories, rather than primarily filtering by individual users. We can still efficiently query data based on `user_id` in BigQuery using standard SQL filtering.
 
-## Project Structure
-```
-GCP-ECOMMERCE-EVENT-PI.../
-├── consumer/
-│   ├── Dockerfile.consumer
-│   ├── ecommerce_consumer.py
-│   ├── requirements.txt
-│   └── utils.py
-├── ecommerce-events-history-in-electronics.../  # Data file(s)
-├── images/
-│   └── flow_redo_drawio.png
-├── producer/
-│   ├── Dockerfile.producer
-│   ├── ecommerce_producer.py
-│   └── requirements.txt
-├── terraform/
-│   ├── main.tf
-│   ├── variables.tf
-│   └── ... (other Terraform files)
-├── .gitignore
-├── confluent_cluster_api.txt
-├── explore.ipynb
-├── gcp_key.json
-├── Makefile
-├── README.md
-└── utils.py
-```
-
-This structure organizes the project into logical directories for the consumer, producer, Terraform infrastructure, and other related files.
 
 ## Technologies Used
 
@@ -102,7 +73,13 @@ You can use the `Makefile` to simplify common tasks:
 * `make build-consumer`: Build the Docker image for the consumer.
 * `make run-consumer`: Run the Docker container for the consumer.
 * `make stop-consumer`: Stop and remove the consumer Docker container.
-* `make clean`: Stop all containers, remove their images, and the downloaded data.
+* `make dbt-run`: Run the dbt transformations (prompts for GCP Project ID and passes it as a variable).
+* `make dbt-build`: Run the dbt build process (prompts for GCP Project ID and passes it as a variable).
+* `make dbt-test`: Run the dbt tests (prompts for GCP Project ID and passes it as a variable).
+* `make dbt-clean`: Clean the dbt project (remove the `target` directory).
+* `make dbt-docs-generate`: Generate the dbt documentation (prompts for GCP Project ID).
+* `make dbt-docs-serve`: Serve the dbt documentation locally.
+* `make clean`: Stop all containers, remove their images, and clean dbt project and data files.
 * `make help`: Display a list of available `make` commands.
 
 ## BigQuery Schema (`kafka_ecom_events` Table)
