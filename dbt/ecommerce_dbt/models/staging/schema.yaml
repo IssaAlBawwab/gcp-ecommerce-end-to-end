@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: staging
+    database: "{{ var('DBT_DATABASE')}}"
+    schema: "{{ var('DBT_SCHEMA', 'ecom_events') }}"
+    tables:
+      - name: kafka_ecom_events

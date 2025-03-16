@@ -45,3 +45,4 @@ terraform.rc
 __pycache__
 images
 !requirements.txt
+*.log

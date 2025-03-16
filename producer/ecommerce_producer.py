@@ -77,7 +77,7 @@ if __name__ == "__main__":
                 topic_name, key=user_id_key, value=message_payload, callback=delivery_report
             )
             producer.poll(0)
-            time.sleep(1)
+            # time.sleep(1)
 
     except KeyboardInterrupt:
         logger.info("Producer application stopped by user.") 

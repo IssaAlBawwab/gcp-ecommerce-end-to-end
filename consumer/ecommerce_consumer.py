@@ -45,9 +45,9 @@ if __name__ == '__main__':
         table = client.get_table(table_ref)
 
         logger.info(f"Consumer subscribing to topic '{topic_name}'...")
-
+        timeout = 0# in seconds
         while True:
-            msg = consumer.poll(1.0)  # one second timeout
+            msg = consumer.poll(timeout)  
 
             if msg is None:
                 continue
