@@ -48,16 +48,16 @@ stop-consumer:
 
 
 dbt-run: ask-project-id
-	cd $(DBT_PROJECT_DIR) && DBT_DATABASE=$(DBT_DATABASE) dbt run
+	cd $(DBT_PROJECT_DIR) && dbt run --vars '{"DBT_DATABASE": "$(DBT_DATABASE)"}'
 
 dbt-build: ask-project-id
-	cd $(DBT_PROJECT_DIR) && DBT_DATABASE=$(DBT_DATABASE) dbt build
+	cd $(DBT_PROJECT_DIR) && dbt build --vars '{"DBT_DATABASE": "$(DBT_DATABASE)"}'
 
 dbt-test: ask-project-id
-	cd $(DBT_PROJECT_DIR) && DBT_DATABASE=$(DBT_DATABASE) dbt test
+	cd $(DBT_PROJECT_DIR) && dbt test --vars '{"DBT_DATABASE": "$(DBT_DATABASE)"}'
 
 dbt-docs-generate: ask-project-id
-	cd $(DBT_PROJECT_DIR) && DBT_DATABASE=$(DBT_DATABASE) dbt docs generate
+	cd $(DBT_PROJECT_DIR) && dbt docs generate
 
 
 clean: stop-producer stop-consumer dbt-clean

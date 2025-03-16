@@ -2,7 +2,7 @@
 
 select
 
-    format_timestamp('%Y-%m-%d %H:%M:%S', event_time) as event_time,
+    extract(DATETIME from event_time) as event_time,
     event_type,
     product_id,
     category_id,
