@@ -97,9 +97,10 @@ The `kafka_ecom_events` table in BigQuery has the following schema:
 | `price`        | FLOAT     | NULLABLE | Price of the product. |
 | `user_id`      | STRING    | NULLABLE | Identifier of the user. |
 | `user_session` | STRING    | NULLABLE | Identifier of the user's session. |
-## Further Development
-
-* dbt
-* looker dashboard
-
+## Dashboard
+* https://lookerstudio.google.com/reporting/56d74565-dc30-4f66-9a11-c9cc01d82686
+* Incase the link stops working since I will probably delete the data in bigquery
+* ![alt text](images/dashboard1.png)
+* ![alt text](images/dashboard2.png)
+* ![alt text](images/dashboard3.png)
 ---
