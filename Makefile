@@ -27,39 +27,34 @@ ask-project-id:
 
 download-data:
 	curl -L -o $(DATA_ZIP_FILE) $(DATA_ZIP_URL)
-	unzip -o -j $(DATA_ZIP_FILE) -d ecommerce-events-history-in-electronics-store
+	unzip -o -j $(DATA_ZIP_FILE) -d $(DATA_DIR)
 
 build-producer: download-data
 	docker build -f $(PRODUCER_DOCKERFILE) -t $(PRODUCER_IMAGE_NAME) .
 
 run-producer: build-producer
-	docker run --name "$(PRODUCER_CONTAINER_NAME)" "$(PRODUCER_IMAGE_NAME)"
+	docker run --rm --name "$(PRODUCER_CONTAINER_NAME)" -it $(PRODUCER_IMAGE_NAME)
 
 build-producer-fast: download-data
 	docker build -f $(PRODUCER_FAST_DOCKERFILE) -t $(PRODUCER_FAST_IMAGE_NAME) .
 
 run-producer-fast: build-producer-fast
-	docker run --name "$(PRODUCER_FAST_CONTAINER_NAME)" "$(PRODUCER_FAST_IMAGE_NAME)"
+	docker run --rm --name "$(PRODUCER_FAST_CONTAINER_NAME)" -it $(PRODUCER_FAST_IMAGE_NAME)
 
-stop-producer:
-	docker stop $(PRODUCER_CONTAINER_NAME) || true
-	docker rm $(PRODUCER_CONTAINER_NAME) || true
+stop-and-remove:
+	docker stop $(PRODUCER_CONTAINER_NAME) 2>/dev/null || true
+	docker rm $(PRODUCER_CONTAINER_NAME) 2>/dev/null || true
+	docker stop $(PRODUCER_FAST_CONTAINER_NAME) 2>/dev/null || true
+	docker rm $(PRODUCER_FAST_CONTAINER_NAME) 2>/dev/null || true
+	docker stop $(CONSUMER_CONTAINER_NAME) 2>/dev/null || true
+	docker rm $(CONSUMER_CONTAINER_NAME) 2>/dev/null || true
 
-stop-producer-fast:
-	docker stop $(PRODUCER_FAST_CONTAINER_NAME) || true
-	docker rm $(PRODUCER_FAST_CONTAINER_NAME) || true
 
 build-consumer:
 	docker build -f $(CONSUMER_DOCKERFILE) -t $(CONSUMER_IMAGE_NAME) .
 
 run-consumer: build-consumer
-	docker run --name "$(CONSUMER_CONTAINER_NAME)" "$(CONSUMER_IMAGE_NAME)"
-
-stop-consumer:
-	docker stop $(CONSUMER_CONTAINER_NAME) || true
-	docker rm $(CONSUMER_CONTAINER_NAME) || true
-
-
+	docker run --rm --name "$(CONSUMER_CONTAINER_NAME)" -it $(CONSUMER_IMAGE_NAME)
 
 dbt-run: ask-project-id
 	cd $(DBT_PROJECT_DIR) && dbt run --vars '{"DBT_DATABASE": "$(DBT_DATABASE)"}'
@@ -73,11 +68,13 @@ dbt-test: ask-project-id
 dbt-docs-generate: ask-project-id
 	cd $(DBT_PROJECT_DIR) && dbt docs generate
 
+dbt-clean:
+	cd $(DBT_PROJECT_DIR) && dbt clean
 
-clean: stop-producer stop-consumer dbt-clean stop-producer-fast
-	docker image rm $(PRODUCER_IMAGE_NAME) || true
-	docker image rm $(PRODUCER_FAST_IMAGE_NAME) || true
-	docker image rm $(CONSUMER_IMAGE_NAME) || true
+clean: stop-and-remove dbt-clean
+	docker image rm $(PRODUCER_IMAGE_NAME) 2>/dev/null || true
+	docker image rm $(PRODUCER_FAST_IMAGE_NAME) 2>/dev/null || true
+	docker image rm $(CONSUMER_IMAGE_NAME) 2>/dev/null || true
 	rm -rf $(DATA_ZIP_FILE) $(DATA_DIR)
 
 help:
@@ -87,13 +84,11 @@ help:
 	@echo "  make download-data   - Download and extract e-commerce events data"
 	@echo "  make build-producer  - Build the Docker image for the producer (downloads data if needed)"
 	@echo "  make run-producer    - Run the Docker container for the producer (builds image if necessary)"
-	@echo "  make stop-producer   - Stop and remove the producer Docker container"
+	@echo "  make stop-and-remove - Stop and remove all containers"
 	@echo "  make build-producer-fast  - Build the Docker image for the producer-fast (downloads data if needed)"
 	@echo "  make run-producer-fast    - Run the Docker container for the producer-fast (builds image if necessary)"
-	@echo "  make stop-producer-fast   - Stop and remove the producer-fast Docker container"
 	@echo "  make build-consumer  - Build the Docker image for the consumer"
 	@echo "  make run-consumer    - Run the Docker container for the consumer"
-	@echo "  make stop-consumer   - Stop and remove the consumer Docker container"
 	@echo "  make dbt-run         - Run the dbt transformations (prompts for GCP Project ID)"
 	@echo "  make dbt-build       - Run the dbt build process (prompts for GCP Project ID)"
 	@echo "  make dbt-test        - Run the dbt tests (prompts for GCP Project ID)"
