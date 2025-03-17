@@ -11,15 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 def generate_ecommerce_event(data_path):
-    """
-    Reads e-commerce events from a CSV file and yields each event as a dictionary.
-
-    Args:
-        data_path (str): Path to the CSV data file.
-
-    Yields:
-        dict: Each e-commerce event as a dictionary.
-    """
     with open(data_path, 'r', newline='', encoding='utf-8') as file:
         input_file_iter = csv.DictReader(file)
         for event in input_file_iter:
@@ -27,23 +18,12 @@ def generate_ecommerce_event(data_path):
 
 
 def delivery_report(err, msg):
-    """
-    Delivery report handler for Kafka Producer.
-
-    This function is asynchronously called by the producer after each message
-    has been delivered (or failed to be delivered) to Kafka.
-
-    Args:
-        err (KafkaError): An error object if message delivery failed, None if successful.
-        msg (Message): The Kafka message that was produced.
-    """
     if err:
         logger.error(f"Message delivery failed: {err}")
     else:
         logger.info(
             f"Message delivered to topic '{msg.topic()}' partition [{msg.partition()}] @ offset {msg.offset()}"
         )
-
 
 if __name__ == "__main__":
 
@@ -60,6 +40,11 @@ if __name__ == "__main__":
         'sasl.mechanisms': 'PLAIN',
         'sasl.username': conf.get('key'),
         'sasl.password': conf.get('secret'),
+        # Linger.ms:  Wait for up to 10ms for more messages to accumulate in the buffer.
+        'linger.ms': 1,  # Very important for batching!
+        # Batch size: Try to send batches of up to 16KB.
+        'batch.size': 8192,
+        'acks': '1', # Wait all insync replicas to ack the message.
     }
 
     producer = Producer(producer_config)
@@ -67,7 +52,7 @@ if __name__ == "__main__":
     topic_name = "ecom_events"
     data_path = 'ecommerce-events-history-in-electronics-store/events.csv'
     event_data = generate_ecommerce_event(data_path)
-
+    count = 0
     try:
         for event in event_data:
             logger.info(f"Producing event: {event}")
@@ -76,13 +61,21 @@ if __name__ == "__main__":
             producer.produce(
                 topic_name, key=user_id_key, value=message_payload, callback=delivery_report
             )
-            producer.poll(0)
-            # time.sleep(1)
+            count += 1
+            # Give the producer time to send messages.  CRUCIAL CHANGE!
+            producer.poll(0.05)
+
+        logger.info("Finished reading events.  Flushing remaining messages...")
+        producer.flush()
+        logger.info(f"Sent {count} messages")
 
     except KeyboardInterrupt:
-        logger.info("Producer application stopped by user.") 
-    except Exception as e:
-        logger.error(f"An error occurred: {e}", exc_info=True) 
-    finally:
+        logger.info("Producer application stopped by user.")
+
         producer.flush()
+    except Exception as e:
+        logger.error(f"An error occurred: {e}", exc_info=True)
+
+        producer.flush()
+    finally:
         logger.info("Producer flushed and closed.")
