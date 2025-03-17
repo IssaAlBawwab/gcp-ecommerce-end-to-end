@@ -17,7 +17,7 @@ The project follows these stages:
 3.  **Confluent Cloud Kafka:** This managed Kafka service acts as the central message broker, decoupling the producer and consumer.
 4.  **Consumer:** A Python application, also containerized with Docker, consumes the events from the `ecom_events` Kafka topic.
 5.  **Google BigQuery (Source Table):** The consumer directly ingests the raw event data into a BigQuery table named `kafka_ecom_events`. Basic transformations applied at this stage.
-6.  **dbt (Data Build Tool):** dbt is used to perform more complex transformations on the data within BigQuery, creating staging, core, and mart tables for analytical purposes.
+6.  **dbt (Data Build Tool):** dbt is used to perform more complex transformations on the data within BigQuery, creating staging and core tables for analytical purposes.
 7.  **Google BigQuery (Transformed Tables):** The transformed data resides in various tables within BigQuery, ready for querying.
 8.  **Analytical Dashboards:** Tools like Looker Studio can connect to the transformed BigQuery tables to create insightful dashboards and reports.
 
@@ -44,18 +44,7 @@ The BigQuery `kafka_ecom_events` table is designed with performance and cost-eff
 * **Terraform:** For defining and managing the infrastructure on GCP.
 * **Looker Studio (example):** For creating analytical dashboards.
 
-## Setup and Deployment (Conceptual)
-
-While specific deployment steps might vary, a general outline would involve:
-
-1.  **Prerequisites:** Ensure you have accounts and necessary configurations for GCP and Confluent Cloud. Install Docker, Make, and Terraform locally.
-2.  **Confluent Cloud Setup:** Create a Kafka cluster and the `ecom_events` topic in Confluent Cloud. Download your Confluent Cloud API configuration file.
-3.  **GCP Setup:** Set up a Google Cloud project and enable the BigQuery API. Create a service account with the necessary permissions and download the JSON key file (`gcp_key.json`).
-4.  **Terraform:** Use Terraform to provision the necessary infrastructure on GCP (e.g., BigQuery dataset).
-5.  **Producer:** Build and run the producer Docker container to start sending data to Kafka.
-6.  **Consumer:** Build and run the consumer Docker container to start reading data from Kafka and ingesting it into BigQuery.
-7.  **dbt:** Configure and run dbt to transform the data in BigQuery.
-8.  **Dashboards:** Connect your chosen analytical dashboard tool (e.g., Looker Studio) to the transformed BigQuery tables.
+## Setup and Deployment (to do)
 
 ## Configuration
 
@@ -69,16 +58,16 @@ You can use the `Makefile` to simplify common tasks:
 * `make download-data`: Download and extract the initial e-commerce events data (if needed for local testing).
 * `make build-producer`: Build the Docker image for the producer.
 * `make run-producer`: Run the Docker container for the producer.
-* `make stop-producer`: Stop and remove the producer Docker container.
+* `make stop-and-remove`: Stop and remove all containers.
+* `make build-producer-fast`: Build the Docker image for the producer-fast (downloads data if needed).
+* `make run-producer-fast`: Run the Docker container for the producer-fast (builds image if necessary).
 * `make build-consumer`: Build the Docker image for the consumer.
 * `make run-consumer`: Run the Docker container for the consumer.
-* `make stop-consumer`: Stop and remove the consumer Docker container.
 * `make dbt-run`: Run the dbt transformations (prompts for GCP Project ID and passes it as a variable).
 * `make dbt-build`: Run the dbt build process (prompts for GCP Project ID and passes it as a variable).
 * `make dbt-test`: Run the dbt tests (prompts for GCP Project ID and passes it as a variable).
 * `make dbt-clean`: Clean the dbt project (remove the `target` directory).
 * `make dbt-docs-generate`: Generate the dbt documentation (prompts for GCP Project ID).
-* `make dbt-docs-serve`: Serve the dbt documentation locally.
 * `make clean`: Stop all containers, remove their images, and clean dbt project and data files.
 * `make help`: Display a list of available `make` commands.
 
