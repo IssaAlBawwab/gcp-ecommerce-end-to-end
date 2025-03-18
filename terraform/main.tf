@@ -13,18 +13,6 @@ provider "google" {
   credentials = "../gcp_key.json"
 }
 
-# Cloud Storage Bucket
-resource "google_storage_bucket" "data_lake_bucket" {
-  name          = "${var.data_lake_bucket_name_prefix}-${var.gcp_project_id}"
-  location      = var.gcp_region
-  storage_class = "STANDARD"
-}
-
-output "data_lake_bucket_name" {
-  value = google_storage_bucket.data_lake_bucket.name
-  description = "Name of the Cloud Storage Data Lake bucket"
-}
-
 resource "google_bigquery_dataset" "default" {
   project                     = var.gcp_project_id
   dataset_id                  = var.dataset_id
@@ -95,3 +83,16 @@ resource "google_bigquery_table" "default" {
 
 }
 
+resource "google_compute_instance" "default" {
+  name         = var.compute_instance
+  machine_type = "e2-highcpu-8"
+  zone         = "us-central1-a"
+  network_interface {
+    network = "default"
+  }
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2404-lts-amd64"
+      }
+      }
+}

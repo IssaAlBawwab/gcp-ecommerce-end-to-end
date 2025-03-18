@@ -9,12 +9,6 @@ variable "gcp_region" {
   default     = "us-central1"
 }
 
-variable "data_lake_bucket_name_prefix" {
-  type        = string
-  description = "Prefix for the Cloud Storage Data Lake bucket name (will be made globally unique)"
-  default     = "ecom-data-lake-bucket"
-}
-
 variable "dataset_id" {
   type        = string
   description = "Dataset ID for bigquery"
@@ -26,3 +20,10 @@ variable "table_id" {
   description = "Table ID for bigquery"
   default = "kafka_ecom_events"
 }
+
+variable "compute_instance" {
+  type = string
+  description = "Compute instance name"
+  default = "producer-consumer"
+}
+
