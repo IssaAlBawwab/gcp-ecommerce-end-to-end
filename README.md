@@ -213,4 +213,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 ### Delete Resources
 * run "terraform destroy" in the machine that you used to run terraform
+
+## Disclaimer
+* AI has been used in helping me to write the readme and make file.
 ---
