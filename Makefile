@@ -63,7 +63,7 @@ attach-consumer-logs:
 	docker logs -f "$(CONSUMER_CONTAINER_NAME)"
 
 run-producer-after-consumer: run-consumer-detached build-producer
-	docker run --rm --name "$(PRODUCER_CONTAINER_NAME)" -it $(PRODUCER_IMAGE_NAME)
+	docker run --rm --name "$(PRODUCER_FAST_CONTAINER_NAME)" -it $(PRODUCER_FAST_IMAGE_NAME)
 
 dbt-create-profile:
 	@echo "Please enter your GCP Project ID:"; \
