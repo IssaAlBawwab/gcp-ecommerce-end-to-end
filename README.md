@@ -177,31 +177,35 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 9. close the vm ssh window, then reopen it, this is to make the group change effect we did to take place
 10. ```
     cd gcp-ecommerce-end-to-end
-    make run-producer-fast
+    make run-consumer-detached
     ```
-11. Should see this 
-    - ![alt text](images/run-prodcuer-fast.png)
+12. make run-producer-fast
+    - you should see this
+    - ![alt text](images/producer.png)
+13. make attach-consumer-logs
+    - wait till you see this
+    - ![alt text](images/consumerlogs.png)
+    - hit CTRL-C after
 
-12. Should see the messages sent to confluent 
-    - ![alt text](images/confluent-messages.png)
+14. Query your table in bigquery
+    - ![alt text](images/query.png)
+    - should have ~ 885130 records, could be +- a small number
 
-13. make run-consumer
-14. Should see this
-    - ![alt text](images/consumer-progress.png)
-    - wait till it finishes then click CTRL-C
-
-15. ```
-    sudo apt install python3-venv
-    python3 -m venv dbt_venv
-    source dbt_venv/bin/activate
-    pip install dbt-core dbt-bigquery    
+15. Back in the ssh
+* ```
+        sudo apt install python3-venv
+        python3 -m venv dbt_venv
+        source dbt_venv/bin/activate
+        pip install dbt-core dbt-bigquery    
     ```
-
 16. run "make dbt-create-profile" and insert your project id
 
-17. make dbt-run and insert your project id
+17. "make dbt-run" and insert your project id
     - should see this after
     - ![alt text](images/dbt-run.png)
 18. Congrats now you should have these tables
     - ![alt text](images/tables.png)
+
+### Delete Resources
+* run "terraform destroy" in the machine that you used to run terraform
 ---
