@@ -92,4 +92,76 @@ The `kafka_ecom_events` table in BigQuery has the following schema:
 * ![alt text](images/dashboard1.png)
 * ![alt text](images/dashboard2.png)
 * ![alt text](images/dashboard3.png)
+
+## Setup
+0. sudo apt update
+1. git clone https://github.com/IssaAlBawwab/gcp-ecommerce-end-to-end.git
+2. upload keys (sometimes this glitches and it prompts you to retry so do that and reupload and it should work)
+    - ![alt text](images/upload_keys.png)
+3. mv gcp_key.json gcp-ecommerce-end-to-end/
+4. mv confluent_cluster_api.txt  gcp-ecommerce-end-to-end/
+5. cd gcp-ecommerce-end-to-end
+6. sudo apt install make
+7. sudo apt-get install -y unzip
+8. install docker with the following
+```
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+8. sudo usermod -aG docker $USER
+9. close the vm ssh window, then reopen it, this is to make the group change effect we did to take place
+10. ```
+    cd gcp-ecommerce-end-to-end
+    make run-producer-fast
+    ```
+11. Should see this 
+    - ![alt text](images/run-prodcuer-fast.png)
+
+12. Should see the messages sent to confluent 
+    - ![alt text](images/confluent-messages.png)
+
+13. make run-consumer
+14. Should see this
+    - ![alt text](images/consumer-progress.png)
+    - wait till it finishes then click CTRL-C
+
+15. ```
+    sudo apt install python3-venv
+    python3 -m venv dbt_venv
+    source dbt_venv/bin/activate
+    pip install dbt-core dbt-bigquery    
+    ```
+
+16. cd dbt/ecommerce_dbt/
+17. dbt init 
+18. choose 1 for bigquery
+    - ![alt text](images/dbt-init-1.png)
+19. choose 2 for service account
+    - ![alt text](images/dbt-init-2.png)
+20. ~/gcp-ecommerce-end-to-end/gcp_key.json
+    - ![alt text](images/dbt-init-3.png)
+21. Insert your project id
+22. Insert your dataset name which is ecom_events
+    - ![alt text](images/dbt-init-4.png)
+23. enter 1 for threads
+24. press enter for job_execution_timeout_seconds leaving it empty
+25. press 1 for US
+26. run this 
+    - ```
+        
+    ```
+1. make dbt-run and insert your project id
 ---

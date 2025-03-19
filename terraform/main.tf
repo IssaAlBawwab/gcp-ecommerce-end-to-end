@@ -89,6 +89,10 @@ resource "google_compute_instance" "default" {
   zone         = "us-central1-a"
   network_interface {
     network = "default"
+    access_config {
+      // Ephemeral public IP
+    }
+
   }
   boot_disk {
     initialize_params {

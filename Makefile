@@ -56,6 +56,26 @@ build-consumer:
 run-consumer: build-consumer
 	docker run --rm --name "$(CONSUMER_CONTAINER_NAME)" -it $(CONSUMER_IMAGE_NAME)
 
+dbt-create-profile:
+	@echo "Please enter your GCP Project ID:"; \
+	read -r PROJECT_ID; \
+	echo "You entered: $$PROJECT_ID"; \
+	mkdir -p ~/.dbt; \
+	echo "ecommerce_dbt:" > ~/.dbt/profiles.yml; \
+	echo " outputs:" >> ~/.dbt/profiles.yml; \
+	echo "   dev:" >> ~/.dbt/profiles.yml; \
+	echo "     dataset: ecom_events" >> ~/.dbt/profiles.yml; \
+	echo "     job_execution_timeout_seconds: 300" >> ~/.dbt/profiles.yml; \
+	echo "     job_retries: 1" >> ~/.dbt/profiles.yml; \
+	echo "     keyfile: ../../gcp_key.json" >> ~/.dbt/profiles.yml; \
+	echo "     method: service-account" >> ~/.dbt/profiles.yml; \
+	echo "     priority: interactive" >> ~/.dbt/profiles.yml; \
+	echo "     project: $$PROJECT_ID" >> ~/.dbt/profiles.yml; \
+	echo "     threads: 1" >> ~/.dbt/profiles.yml; \
+	echo "     type: bigquery" >> ~/.dbt/profiles.yml; \
+	echo " target: dev" >> ~/.dbt/profiles.yml; \
+	echo "dbt profile created at ~/.dbt/profiles.yml with your Project ID."
+
 dbt-run: ask-project-id
 	cd $(DBT_PROJECT_DIR) && dbt run --vars '{"DBT_DATABASE": "$(DBT_DATABASE)"}'
 
