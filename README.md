@@ -2,7 +2,7 @@
 
 This project implements an end-to-end data pipeline for processing e-commerce events, leveraging Google Cloud Platform (GCP) services, Confluent Kafka, Docker, and other tools.
 
-![Data Flow](images/flow_redo_drawio.png)
+![Data Flow](images/flow1.png)
 
 ## Overview
 
@@ -48,8 +48,8 @@ The BigQuery `kafka_ecom_events` table is designed with performance and cost-eff
 * **Looker Studio (example):** For creating analytical dashboards.
 
 ## Running the Applications
-
-You can use the `Makefile` to simplify common tasks:
+* Note: "producer-fast" is only for quickly producing all the data at once, <br>in a real environment the data will be produced around the rate of "producer"
+<br><br>You can use the `Makefile` to simplify common tasks:
 
 * `make download-data`: Download and extract the initial e-commerce events data (if needed for local testing).
 * `make build-producer`: Build the Docker image for the producer.
@@ -96,6 +96,8 @@ The `kafka_ecom_events` table in BigQuery has the following schema:
 
 
 ## Setup
+
+### After you created the confluent topic and created the api key, and the key for the gcp service account
 0. sudo apt update
 1. git clone https://github.com/IssaAlBawwab/gcp-ecommerce-end-to-end.git
 2. upload keys (sometimes this glitches and it prompts you to retry so do that and reupload and it should work)
