@@ -58,7 +58,9 @@ The BigQuery `kafka_ecom_events` table is designed with performance and cost-eff
 * `make build-producer-fast`: Build the Docker image for the producer-fast (downloads data if needed).
 * `make run-producer-fast`: Run the Docker container for the producer-fast (builds image if necessary).
 * `make build-consumer`: Build the Docker image for the consumer.
-* `make run-consumer`: Run the Docker container for the consumer.
+* `make run-consumer`: Run the Docker container for the consumer in interactive mode.
+* `make run-consumer-detached`: Run the consumer in detached mode (runs in the background).
+* `make attach-consumer-logs`: Attach to the logs of the detached consumer.
 * `make dbt-run`: Run the dbt transformations (prompts for GCP Project ID and passes it as a variable).
 * `make dbt-build`: Run the dbt build process (prompts for GCP Project ID and passes it as a variable).
 * `make dbt-test`: Run the dbt tests (prompts for GCP Project ID and passes it as a variable).
@@ -66,6 +68,9 @@ The BigQuery `kafka_ecom_events` table is designed with performance and cost-eff
 * `make dbt-docs-generate`: Generate the dbt documentation (prompts for GCP Project ID).
 * `make clean`: Stop all containers, remove their images, and clean dbt project and data files.
 * `make help`: Display a list of available `make` commands.
+
+<br>
+
 
 ## BigQuery Schema (`kafka_ecom_events` Table)
 
