@@ -8,6 +8,9 @@ This project implements an end-to-end data pipeline for processing e-commerce ev
 
 The pipeline ingests e-commerce event data, streams it through Confluent Cloud Kafka, stores it in Google BigQuery, transforms it using dbt, and finally makes it available for analysis and visualization via Looker Studio.
 
+## Data Used (No need to download it, the scripts will automatically do that)
+* https://www.kaggle.com/datasets/mkechinov/ecommerce-events-history-in-electronics-store
+
 ## Architecture
 
 The project follows these stages:
@@ -43,13 +46,6 @@ The BigQuery `kafka_ecom_events` table is designed with performance and cost-eff
 * **Make:** For automating build and deployment tasks.
 * **Terraform:** For defining and managing the infrastructure on GCP.
 * **Looker Studio (example):** For creating analytical dashboards.
-
-## Setup and Deployment (to do)
-
-## Configuration
-
-* **Confluent Cloud:** The producer and consumer applications rely on a Confluent Cloud API configuration file (`confluent_cluster_api.txt`) for connecting to your Kafka cluster. Ensure this file is placed in the project root.
-* **GCP Credentials:** The consumer application uses a GCP service account key file (`gcp_key.json`) to authenticate with Google BigQuery. Ensure this file is placed in the project root (exercise caution when handling this file and avoid committing it to public repositories).
 
 ## Running the Applications
 
@@ -92,6 +88,12 @@ The `kafka_ecom_events` table in BigQuery has the following schema:
 * ![alt text](images/dashboard1.png)
 * ![alt text](images/dashboard2.png)
 * ![alt text](images/dashboard3.png)
+
+## Configuration
+
+* **Confluent Cloud:** The producer and consumer applications rely on a Confluent Cloud API configuration file (`confluent_cluster_api.txt`) for connecting to your Kafka cluster. Ensure this file is placed in the project root.
+* **GCP Credentials:** The consumer application uses a GCP service account key file (`gcp_key.json`) to authenticate with Google BigQuery. Ensure this file is placed in the project root (exercise caution when handling this file and avoid committing it to public repositories).
+
 
 ## Setup
 0. sudo apt update
@@ -145,23 +147,11 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
     pip install dbt-core dbt-bigquery    
     ```
 
-16. cd dbt/ecommerce_dbt/
-17. dbt init 
-18. choose 1 for bigquery
-    - ![alt text](images/dbt-init-1.png)
-19. choose 2 for service account
-    - ![alt text](images/dbt-init-2.png)
-20. ~/gcp-ecommerce-end-to-end/gcp_key.json
-    - ![alt text](images/dbt-init-3.png)
-21. Insert your project id
-22. Insert your dataset name which is ecom_events
-    - ![alt text](images/dbt-init-4.png)
-23. enter 1 for threads
-24. press enter for job_execution_timeout_seconds leaving it empty
-25. press 1 for US
-26. run this 
-    - ```
-        
-    ```
-1. make dbt-run and insert your project id
+16. run "make dbt-create-profile" and insert your project id
+
+17. make dbt-run and insert your project id
+    - should see this after
+    - ![alt text](images/dbt-run.png)
+18. Congrats now you should have these tables
+    - ![alt text](images/tables.png)
 ---
