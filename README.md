@@ -90,14 +90,62 @@ The `kafka_ecom_events` table in BigQuery has the following schema:
 * ![alt text](images/dashboard3.png)
 
 ## Configuration
+### Confluent
+1. Create Confluent Cluster
+    - ![alt text](images/cluster1.png)
+    - ![alt text](images/cluster2.png)
+    - ![alt text](images/cluster3.png)
+    - ![alt text](images/image.png)
+
+2. Create api key
+    - ![alt text](images/clusterkey.png)
+    - ![alt text](images/clusterkey2.png)
+    - ![alt text](images/clusterkey3.png)
+    -  Important : Rename key to "confluent_cluster_api.txt"
+
+3. Create topic
+    - ![alt text](images/topic.png)
+    - Name it "ecom_events" 
+    - ![alt text](images/topic2.png)
+
+### Google Cloud
+0. Create Project
+    - ![alt text](images/gcpproject.png)
+
+1. Enable the following apis
+    - ![alt text](images/computeapi.png)
+    - ![alt text](images/bigqueryapi.png)
+    - ![alt text](images/storageapi.png)
+
+2. Create Service account
+    - ![alt text](images/service.png)
+    - ![alt text](images/service2.png)
+    - Hit "done"
+    - ![alt text](images/service3.png)
+    - Click "Manage Keys"
+    - ![alt text](images/service4.png)
+    - Click "Create new key" and then choose "JSON"
+    - Important: Rename it to "gcp_key.json"
 
 * **Confluent Cloud:** The producer and consumer applications rely on a Confluent Cloud API configuration file (`confluent_cluster_api.txt`) for connecting to your Kafka cluster. Ensure this file is placed in the project root.
 * **GCP Credentials:** The consumer application uses a GCP service account key file (`gcp_key.json`) to authenticate with Google BigQuery. Ensure this file is placed in the project root (exercise caution when handling this file and avoid committing it to public repositories).
 
+### Terraform
+1. Install terraform on your machine follow guide https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli 
+2. git clone https://github.com/IssaAlBawwab/gcp-ecommerce-end-to-end.git
+3. Make sure gcp_key.json and confluent_cluster_api.txt are in the project root
+4. cd terraform/
+5. terraform apply 
+6. enter gcp project id (get it from here copy "ID" not the name)
+    - ![alt text](images/gcpid.png)
+7. enter "yes"
+8. ![alt text](images/terraform1.png)
 
 ## Setup
-
-### After you created the confluent topic and created the api key, and the key for the gcp service account
+### enter VM
+* ![alt text](images/entervm.png)
+* click "SSH"
+### After you configured everything above
 0. sudo apt update
 1. git clone https://github.com/IssaAlBawwab/gcp-ecommerce-end-to-end.git
 2. upload keys (sometimes this glitches and it prompts you to retry so do that and reupload and it should work)

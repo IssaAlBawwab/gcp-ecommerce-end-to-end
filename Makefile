@@ -56,6 +56,15 @@ build-consumer:
 run-consumer: build-consumer
 	docker run --rm --name "$(CONSUMER_CONTAINER_NAME)" -it $(CONSUMER_IMAGE_NAME)
 
+run-consumer-detached: build-consumer
+	docker run --name "$(CONSUMER_CONTAINER_NAME)" -d $(CONSUMER_IMAGE_NAME)
+
+attach-consumer-logs:
+	docker logs -f "$(CONSUMER_CONTAINER_NAME)"
+
+run-producer-after-consumer: run-consumer-detached build-producer
+	docker run --rm --name "$(PRODUCER_CONTAINER_NAME)" -it $(PRODUCER_IMAGE_NAME)
+
 dbt-create-profile:
 	@echo "Please enter your GCP Project ID:"; \
 	read -r PROJECT_ID; \
